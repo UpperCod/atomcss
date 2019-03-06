@@ -1,31 +1,39 @@
 export function parse(template) {
-    let deeps = [];
-    return tree(
-        template
-            .match(/[^\n\r]+/g)
-            .map(value => {
-                let length = 0,
-                    line = "";
-                for (let i = 0; i < value.length; i++) {
-                    let letter = value[i];
-                    if (line) {
-                        line += letter;
-                        continue;
-                    }
-                    if (/\S/.test(letter) && !line) {
-                        line += letter;
-                    } else {
-                        length += /\u0009/.test(letter) ? 4 : 1;
-                    }
-                }
-                if (!line || /^\/\//.test(line)) return [];
-                if (deeps.indexOf(length) === -1) deeps.push(length);
-
-                return [length, line];
-            })
-            .filter(([deep]) => deep > -1)
-            .map(([length, line]) => [deeps.indexOf(length), line])
-    );
+    let deeps = [],
+        lines = [],
+        values = template.match(/[^\n\r]+/g),
+        length = values.length;
+    for (let i = 0; i < length; i++) {
+        let value = values[i],
+            deep = 0,
+            line = "";
+        for (let i = 0; i < value.length; i++) {
+            let letter = value[i];
+            if (line) {
+                line += letter;
+                continue;
+            }
+            if (/\S/.test(letter) && !line) {
+                line += letter;
+            } else {
+                deep += /\u0009/.test(letter) ? 4 : 1;
+            }
+        }
+        if (!line || /^\/\//.test(line)) continue;
+        if (deeps.indexOf(deep) === -1) {
+            let min = Math.min(...deeps);
+            deep = min === Infinity ? deep : min > deep ? min : deep;
+            deeps.push(deep);
+        }
+        deep = deeps.indexOf(deep);
+        let prevLine = lines[lines.length - 1];
+        if (prevLine) {
+            let prevDeep = prevLine[0];
+            deep = prevDeep < deep - 1 ? prevDeep + 1 : deep;
+        }
+        lines.push([deep, line]);
+    }
+    return tree(lines);
 }
 
 function tree(data) {
