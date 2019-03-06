@@ -1,7 +1,7 @@
 {
   "name": "@atomico/atomcss",
   "description": "css-in-js, small and minimalist",
-  "version": "0.0.0",
+  "version": "0.0.3",
   "main": "dist/atomico-atomcss.js",
   "module": "dist/atomico-atomcss.mjs",
   "umd:main": "dist/atomico-atomcss.umd.js",
