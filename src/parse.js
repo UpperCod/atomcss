@@ -24,7 +24,7 @@ function tree(data) {
         };
     for (let i in data) {
         let [length, line] = data[i];
-        if (/^\/\//.test(line)) continue;
+        if (/^\/\//.test(line) || !line) continue;
         if (length === 0) {
             if (next) send();
             next = [];
