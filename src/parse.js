@@ -2,13 +2,28 @@ export function parse(template) {
     let deeps = [];
     return tree(
         template
-            .match(/[^\n]+/g)
+            .match(/[^\n\r]+/g)
             .map(value => {
-                let [all, tabs, line] = value.match(/^([\s]*)(.+)/);
-                length = tabs.length;
+                let length = 0,
+                    line = "";
+                for (let i = 0; i < value.length; i++) {
+                    let letter = value[i];
+                    if (line) {
+                        line += letter;
+                        continue;
+                    }
+                    if (/\S/.test(letter) && !line) {
+                        line += letter;
+                    } else {
+                        length += /\u0009/.test(letter) ? 4 : 1;
+                    }
+                }
+                if (!line || /^\/\//.test(line)) return [];
                 if (deeps.indexOf(length) === -1) deeps.push(length);
-                return [length, line.trim()];
+
+                return [length, line];
             })
+            .filter(([deep]) => deep > -1)
             .map(([length, line]) => [deeps.indexOf(length), line])
     );
 }
@@ -24,7 +39,6 @@ function tree(data) {
         };
     for (let i in data) {
         let [length, line] = data[i];
-        if (/^\/\//.test(line) || !line) continue;
         if (length === 0) {
             if (next) send();
             next = [];
