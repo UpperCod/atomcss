@@ -40,6 +40,8 @@ export function css(string, id) {
     }
 
     getClassName.toString = () => id;
+    // miClass.sample
+    for (let key in states) getClassName[key] = states[key];
 
     return getClassName;
 }
