@@ -1,5 +1,8 @@
 ## @atomico/atomcss
 
+[![npm](https://badgen.net/npm/v/@atomico/atomcss)](http://npmjs.com/@atomico/atomcss)
+[![gzip](https://badgen.net/bundlephobia/minzip/@atomico/atomcss)](https://bundlephobia.com/result?p=@atomico/atomcss)
+
 Es un css-in-js agnóstico, permite crear estilos estáticos y encapsulados por un nombre de clase generado por **Atomcss**.
 
 **Atomcss** posee una sintaxis minimalista inspirada en [stylus](http://stylus-lang.com/), pero centrada en la creación de componentes detro del mismo js
